@@ -1,0 +1,104 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      epsilon;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -3 0 0 0 0];
+
+internalField   uniform 7.6;
+
+boundaryField
+{
+    #include            "include/ABLConditions"
+	
+    left
+    {
+        type            symmetryPlane;
+    }
+    right
+    {
+        type            symmetryPlane;
+    }
+    ground
+    {
+        type            epsilonWallFunction;
+        Cmu             $Cmu;
+        kappa           $kappa;
+//	z0		$z0;
+//        E               9.8;
+        value           $internalField;
+        blending        exponential;
+    }
+    atm
+    {
+        type            symmetryPlane;
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+
+    inlet
+    {
+        type            atmBoundaryLayerInletEpsilon;
+        #include        "include/ABLConditions"
+        value           uniform 0.0;
+    }
+
+    wall
+    {
+        type            epsilonWallFunction;
+	Cmu             $Cmu;
+        kappa           $kappa;
+        value           $internalField;
+        blending        exponential;
+    }
+
+    #include "include/setConstraintTypes"
+    // #includeEtc "caseDicts/setConstraintTypes"
+
+    /*
+    east
+    {
+        type            epsilonWallFunction;
+        Cmu             0.09;
+        kappa           0.4;
+        E               9.8;
+        value           uniform 0.0722;
+    }
+    west
+    {
+        type            epsilonWallFunction;
+        Cmu             0.09;
+        kappa           0.4;
+        E               9.8;
+        value           uniform 0.0177;
+    }
+    sur
+    {
+        type            epsilonWallFunction;
+        Cmu             0.09;
+        kappa           0.4;
+        E               9.8;
+        value           uniform 0.0177;
+    }
+    */
+
+}
+
+
+// ************************************************************************* //

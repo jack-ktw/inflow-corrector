@@ -1,0 +1,108 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      omega;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 -1 0 0 0 0];
+
+internalField   uniform 12.76;
+
+boundaryField
+{
+    #include            "include/ABLConditions"
+
+    left
+    {
+        type            symmetryPlane;
+    }
+    right
+    {
+        type            symmetryPlane;
+    }
+    ground
+    {
+        type            omegaWallFunction;
+        Cmu             $Cmu;
+        kappa           $kappa;
+//	z0		$z0;
+        value           $internalField;
+        blending        exponential;
+    }
+    atm
+    {
+        type            symmetryPlane;
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+
+    inlet
+    {
+//        type            inletOutlet;
+//	inletValue      uniform 12.5;
+//        value           uniform 12.5;
+	type            atmBoundaryLayerInletOmega;
+        #include        "include/ABLConditions"
+        value           uniform 0.0;
+
+
+    }
+
+    wall
+    {
+        type            omegaWallFunction;
+        Cmu             $Cmu;
+        kappa           $kappa;
+        value           $internalField;
+        blending        exponential;
+    }
+
+    #include "include/setConstraintTypes"
+    // #includeEtc "caseDicts/setConstraintTypes"
+
+    /*
+    east
+    {
+        type            epsilonWallFunction;
+        Cmu             0.09;
+        kappa           0.4;
+        E               9.8;
+        value           uniform 0.0722;
+    }
+    west
+    {
+        type            epsilonWallFunction;
+        Cmu             0.09;
+        kappa           0.4;
+        E               9.8;
+        value           uniform 0.0177;
+    }
+    sur
+    {
+        type            epsilonWallFunction;
+        Cmu             0.09;
+        kappa           0.4;
+        E               9.8;
+        value           uniform 0.0177;
+    }
+    */
+
+}
+
+
+// ************************************************************************* //

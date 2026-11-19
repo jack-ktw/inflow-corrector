@@ -1,0 +1,119 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+backgroundMesh
+{
+    xMin     -2.5;
+    xMax     7.5;
+    yMin     -2.5;
+    yMax     2.5;
+    zMin     0.0;
+    zMax     3.0;
+    xCells   200;
+    yCells   10;
+    zCells   60;
+}
+
+scale 1;
+
+vertices
+(
+    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMin)
+    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMin)
+    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMin)
+    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMin)
+
+    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMax)
+    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMax)
+    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMax)
+    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMax)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7)
+    (
+        $:backgroundMesh.xCells
+        $:backgroundMesh.yCells
+        $:backgroundMesh.zCells
+    )
+    simpleGrading (1 1 1.05)
+);
+
+edges
+(
+);
+
+boundary
+(
+    left
+    {
+        type symmetryPlane;
+        faces
+        (
+            (3 2 6 7)
+        );
+    }
+
+    right
+    {
+        type symmetryPlane;
+        faces
+        (
+            (0 4 5 1)
+        );
+    }
+
+    ground
+    {
+        type wall;
+        faces
+        (
+            (0 1 2 3)
+        );
+    }
+    atm
+    {
+        type symmetryPlane;
+        faces
+        (
+            (4 7 6 5)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (1 5 6 2)
+        );
+    }
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 3 7 4)
+        );
+    }
+
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

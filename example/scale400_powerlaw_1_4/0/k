@@ -1,0 +1,94 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 3.83;
+
+boundaryField
+{
+    left
+    {
+        type            symmetryPlane;
+    }
+    right
+    {
+        type            symmetryPlane;
+    }
+    ground
+    {
+        type            kqRWallFunction;
+        value           uniform 0.0;
+    }
+    atm
+    {
+        type            symmetryPlane;
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+    
+inlet
+{
+    // Mandatory entries (unmodifiable)
+    type            atmBoundaryLayerInletK;
+
+    // Mandatory (inherited) entries (runtime modifiable)
+    #include        "include/ABLConditions"
+
+//    initABL         true;
+//    C1              0.0;
+//    C2              0.065;
+
+    // Conditional mandatory (inherited) entries (runtime modifiable)
+    value           uniform 0;    // when initABL=false_
+}
+
+    wall
+    {
+        type            kqRWallFunction;
+        value           uniform 0.0;
+    }
+
+    #include "include/setConstraintTypes"
+    // #includeEtc "caseDicts/setConstraintTypes"
+
+    /*
+    east
+    {
+        type            kqRWallFunction;
+        value           uniform 0.03375;
+    }
+    west
+    {
+        type            kqRWallFunction;
+        value           uniform 0.03375;
+    }
+    sur
+    {
+        type            kqRWallFunction;
+        value           uniform 0.03375;
+    }
+    */
+
+}
+
+
+// ************************************************************************* //
