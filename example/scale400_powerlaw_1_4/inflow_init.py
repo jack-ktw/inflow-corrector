@@ -6,7 +6,8 @@ Initialize the DFSR profile.
 '''
 if __name__ == "__main__": 
     proj_dir = r"."
-    exp_dir = r"../WindTunnel/rectangular_building"
+    repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    exp_dir = os.path.join(repo_dir, "WindTunnel", "rectangular_building")
     ux_fp = os.path.join(exp_dir, "u_1_4.csv")
     iu_fp = os.path.join(exp_dir, "Iu_1_4.csv")
 
